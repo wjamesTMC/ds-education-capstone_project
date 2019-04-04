@@ -1,52 +1,51 @@
-#------------------------------------------------------------
+##############################################################################
 #
 # Capstone - Movielens Project
+# B. James (BCDL)
 #
-#------------------------------------------------------------
+# Descriptioin: Create a movie recommendation system using the MovieLens dataset
+# and the tools shown throughout the courses. Use the 10M version of the
+# MovieLens dataset.
+#
+# Train a machine learning algorithm using the inputs in one subset to predict
+# movie ratings in the validation set. The project will be assessed by peer
+# grading.
+#
+##############################################################################
 
-# Import libraries
+#----------------------------------------------------------------------------- 
+# Section 1: Set ups, downloads, and establish data sets
+#-----------------------------------------------------------------------------
+
+# Necessary libraries
+
 library(tidyverse)
-library(dslabs)
-library(dplyr)
-library(ggplot2)
-library(ggthemes)
-library(ggrepel)
-library(gridExtra)
-library(RColorBrewer)
+library(tidyr)
 library(caret)
-library(extrafont)
-library(plyr)
-library(scales)
-library(lubridate)
+library(dplyr)
+library(data.table)
+library(splitstackshape)
 
-#############################################################
-# Create edx set, validation set, and submission file
-#############################################################
-
-# Note: this process could take a couple of minutes
-
-if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
-if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
-
-# MovieLens 10M dataset:
-# https://grouplens.org/datasets/movielens/10m/
-# http://files.grouplens.org/datasets/movielens/ml-10m.zip
+# Download the MovieLens data 
 
 dl <- tempfile()
 download.file("http://files.grouplens.org/datasets/movielens/ml-10m.zip", dl)
 
-ratings <- read.table(text = gsub("::", "\t", readLines(unzip(dl, "ml-10M100K/ratings.dat"))),
-                      col.names = c("userId", "movieId", "rating", "timestamp"))
+# Create the datasets
+
+ratings <- fread(text = gsub("::", "\t", readLines(unzip(dl, "ml-10M100K/ratings.dat"))), col.names = c("userId", "movieId", "rating", "timestamp"))
 
 movies <- str_split_fixed(readLines(unzip(dl, "ml-10M100K/movies.dat")), "\\::", 3)
 colnames(movies) <- c("movieId", "title", "genres")
-movies <- as.data.frame(movies) %>% mutate(movieId = as.numeric(levels(movieId))[movieId],
-                                           title = as.character(title),
-                                           genres = as.character(genres))
+
+movies <- as.data.frame(movies) %>% 
+         mutate(movieId = as.numeric(levels(movieId))[movieId],
+         title = as.character(title),
+         genres = as.character(genres))
 
 movielens <- left_join(ratings, movies, by = "movieId")
 
-# Validation set will be 10% of MovieLens data
+# Create the validation set (10% of MovieLens data)
 
 set.seed(1)
 test_index <- createDataPartition(y = movielens$rating, times = 1, p = 0.1, list = FALSE)
@@ -65,3 +64,39 @@ removed <- anti_join(temp, validation)
 edx <- rbind(edx, removed)
 
 rm(dl, ratings, movies, test_index, temp, movielens, removed)
+
+#----------------------------------------------------------------------------- 
+# Section 2: 
+#-----------------------------------------------------------------------------
+
+
+
+
+
+
+#------------------------------------------------------------------------
+# REMOVE THE SECTION BELOW BEFORE SUBMITTING
+#------------------------------------------------------------------------
+
+# Summary information for reference
+# Dataset has 9000055 rows and 6 columns (dim(edx))
+# There are 10677 unique movie IDs
+# There are 69878 unique users
+
+# Useful code pieces
+
+# Numbers of different genres
+edx %>% separate_rows(genres, sep = "\\|") %>%
+  group_by(genres) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+# Most ratings
+edx %>% group_by(movieId, title) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+# The five most given ratings in order from most to least?
+edx %>% group_by(rating) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
