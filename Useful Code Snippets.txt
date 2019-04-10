@@ -1,0 +1,50 @@
+# Use of Group_by and Summarize
+
+heights %>% group_by(sex) %>% summarize(mean(height), sd(height))
+#   A tibble: 2 x 3
+#   sex    `mean(height)` `sd(height)`
+#   <fct>           <dbl>        <dbl>
+# 1 Female           64.9         3.76
+# 2 Male             69.3         3.61
+
+# Computing overall accuracy
+
+cutoff <- seq(61, 70)
+accuracy <- map_dbl(cutoff, function(x){
+     y_hat <- ifelse(train_set$height > x, "Male", "Female") %>% 
+          factor(levels = levels(test_set$sex))
+     mean(y_hat == train_set$sex)
+})
+
+# F1_Score() function
+
+data(cars)
+logreg <- glm(formula = vs ~ hp + wt,
+              family = binomial(link = "logit"), data = mtcars)
+pred <- ifelse(logreg$fitted.values < 0.5, 0, 1)
+F1_Score(y_pred = pred, y_true = mtcars$vs, positive = "0")
+F1_Score(y_pred = pred, y_true = mtcars$vs, positive = "1")
+
+# ROC curves
+# Remember that for each of these parameters, we can get a different sensitivity
+# and specificity. For this reason, a very common approach to evaluating methods
+# is to compare them graphically by plotting both.
+
+# A widely used plot that does this is the receiver operating characteristic
+# (ROC) curve.
+# The ROC curve plots sensitivity (TPR) versus 1 - specificity or the false
+# positive rate (FPR). Here is an ROC curve for guessing sex but using different
+# probabilities of guessing male:
+
+probs <- seq(0, 1, length.out = 10)
+guessing <- map_df(probs, function(p){
+     y_hat <- sample(c("Male", "Female"), length(test_index), replace = TRUE, prob=c(p, 1-p)) %>% 
+          factor(levels = c("Female", "Male"))
+     list(method = "Guessing",
+          FPR = 1 - specificity(y_hat, test_set$sex),
+          TPR = sensitivity(y_hat, test_set$sex))
+})
+guessing %>% qplot(FPR, TPR, data =., xlab = "1 - Specificity", ylab = "Sensitivity")
+
+Might be useful for predicting - from quiz practice with machine learning
+https://courses.edx.org/courses/course-v1:HarvardX+PH125.8x+2T2018/courseware/8b853e2666d7488090a20f29632732da/75feae7f54be4ae6ab2f0c8ac90f5e70/?child=first
