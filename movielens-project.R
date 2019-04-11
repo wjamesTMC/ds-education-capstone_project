@@ -47,6 +47,7 @@ library(caret)
 library(dplyr)
 library(data.table)
 library(splitstackshape)
+library(reshape2)
 
 # Download the MovieLens data 
 
@@ -112,6 +113,7 @@ avg_rmse <- RMSE(edx$rating, mu)
 # set up a dataframe to hold the results of this average and modeling RMSEs
 rmse_results <- data_frame(method = "Just the average", RMSE = avg_rmse)
 
+head(edx)
 # Introduce b_i, to account for general user bias in ratings
 movie_avgs <- edx %>% 
   group_by(movieId) %>% 
