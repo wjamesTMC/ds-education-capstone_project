@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Capstone - Movielens Project
-# B. James (BCDL)
+# Bill James (BCDL) / jamesbcdl@gmail.com
 #
 # Description: Create a movie recommendation system using the MovieLens dataset
 # and the tools shown throughout the courses. Use the 10M version of the
