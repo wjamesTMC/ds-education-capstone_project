@@ -21,20 +21,6 @@
 #
 ##############################################################################
 
-# introduction and Overview
-#    The dataset
-#    Project goalsand summarizes
-#    Overall approach / steps Performed
-
-# Methods and analysis
-#    Data clearning
-#    data exploration and visualization
-#    Insights and modeling approach
-
-# Results
-
-# Conclusions
-
 #----------------------------------------------------------------------------- 
 # Set ups, downloads, and establish data sets
 #-----------------------------------------------------------------------------
@@ -440,8 +426,3 @@ rmse_results_test
 #------------------------------------------------------------------------
 # End of analysis
 #------------------------------------------------------------------------
-
-# Summary information for reference
-# Dataset has 9000055 rows and 6 columns (dim(edx))
-# There are 10677 unique movie IDs
-# There are 69878 unique users
