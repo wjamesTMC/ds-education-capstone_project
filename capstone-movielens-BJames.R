@@ -2,6 +2,9 @@
 #
 # Capstone - Movielens Project
 # Bill James (BCDL) / jamesbcdl@gmail.com
+# Files are located in github at:
+#
+#      https://github.com/wjamesTMC/ds-education-capstone_project.git
 #
 # Description: Create a movie recommendation system using the MovieLens dataset
 # and the tools shown throughout the courses. Use the 10M version of the
